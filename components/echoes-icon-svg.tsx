@@ -1,13 +1,13 @@
 import Image from "next/image"
 
-export default function EchoesIconSVG({ className = "w-[24px] h-[24px]" }: { className?: string }) {
+export default function EchoesIconSVG({ className = "w-[34px] h-[34px]" }: { className?: string }) {
   return (
     <div className={className}>
       <Image
         src="/icons/meta-echoes-icon.webp"
         alt="Meta Echoes"
-        width={24}
-        height={24}
+        width={34}
+        height={34}
         className="w-full h-full object-contain"
       />
     </div>
