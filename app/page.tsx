@@ -1164,7 +1164,7 @@ export default function InstagramEchoes() {
                       className="flex items-center space-x-0.5"
                       aria-label="Echoes"
                     >
-                      <EchoesIconSVG className="w-[34px] h-[34px]" />
+                      <EchoesIconSVG className="w-[35px] h-[35px]" />
                       <span className="text-xs">{getTotalEchoesCount(post.id)}</span>
                     </button>
 
