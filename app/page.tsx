@@ -1164,7 +1164,7 @@ export default function InstagramEchoes() {
                       className="flex items-center space-x-0.5"
                       aria-label="Echoes"
                     >
-                      <EchoesIconSVG className="w-[18px] h-[18px]" />
+                      <EchoesIconSVG className="w-[24px] h-[24px]" />
                       <span className="text-xs">{getTotalEchoesCount(post.id)}</span>
                     </button>
 
@@ -1195,7 +1195,7 @@ export default function InstagramEchoes() {
             {/* Header with Meta logo and title */}
             <div className="text-center py-4">
               <div className="flex justify-center mb-2">
-                <Image src="/images/meta-logo.jpg" alt="Meta logo" width={48} height={48} className="object-contain" />
+                <Image src="/images/meta-logo.jpg" alt="Meta logo" width={24} height={24} className="object-contain" />
               </div>
               <h2 className="text-2xl font-bold" style={{ fontFamily: "cursive" }}>
                 Meta echoes
