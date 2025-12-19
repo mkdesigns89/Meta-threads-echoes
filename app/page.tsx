@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react"
 import Image from "next/image"
-import { Heart, MessageCircle, Repeat, Eye } from "lucide-react"
+import { Heart, MessageCircle, Repeat2, Send, MoreHorizontal, TrendingUp } from "lucide-react"
 import EchoesIconSVG from "@/components/echoes-icon-svg"
 
 // Utility functions to parse and format numbers
@@ -1164,54 +1164,21 @@ export default function InstagramEchoes() {
                       className="flex items-center space-x-0.5"
                       aria-label="Echoes"
                     >
-                      <EchoesIconSVG className="w-[15px] h-[15px]" />
+                      <EchoesIconSVG className="w-[18px] h-[18px]" />
                       <span className="text-xs">{getTotalEchoesCount(post.id)}</span>
                     </button>
 
                     <div className="flex items-center space-x-1">
-                      <Repeat className="w-[15px] h-[15px]" />
+                      <Repeat2 className="w-[15px] h-[15px]" />
                       <span className="text-xs">{post.reposts}</span>
                     </div>
 
                     <button className="flex items-center space-x-1" aria-label="Share">
-                      <svg
-                        width="15"
-                        height="15"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="text-gray-500"
-                      >
-                        <path
-                          d="M22 2L11 13"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M22 2L15 22L11 13L2 9L22 2Z"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
+                      <Send className="w-[15px] h-[15px]" />
                     </button>
 
                     <button className="ml-auto" aria-label="More options">
-                      <svg
-                        width="15"
-                        height="15"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="text-gray-500"
-                      >
-                        <circle cx="12" cy="12" r="1.5" fill="currentColor" />
-                        <circle cx="6" cy="12" r="1.5" fill="currentColor" />
-                        <circle cx="18" cy="12" r="1.5" fill="currentColor" />
-                      </svg>
+                      <MoreHorizontal className="w-[15px] h-[15px]" />
                     </button>
                   </div>
                 </div>
@@ -1228,12 +1195,7 @@ export default function InstagramEchoes() {
             {/* Header with Meta logo and title */}
             <div className="text-center py-4">
               <div className="flex justify-center mb-2">
-                <svg width="48" height="48" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M20.3 13.4c-1.2-2-3.5-4.2-6.6-4.2-3.8 0-6.1 2.8-6.1 6.8 0 3.2 1.8 5.4 4.3 7.2 1.7 1.3 2.5 2.1 2.5 3.6 0 1.4-1 2.4-2.5 2.4-2.3 0-3.5-2-4.6-4.1l-3.2 2c1.5 3 4.2 5.9 7.9 5.9 4.1 0 6.8-2.7 6.8-6.5 0-3.1-1.7-5.2-4.2-7-1.8-1.3-2.7-2.2-2.7-3.7 0-1.3.9-2.2 2.2-2.2 1.9 0 3 1.6 4.1 3.4l3.1-2.6zm8.1 16.5c4.1 0 6.8-2.7 6.8-6.5 0-3.1-1.7-5.2-4.2-7-1.8-1.3-2.7-2.2-2.7-3.7 0-1.3.9-2.2 2.2-2.2 1.9 0 3 1.6 4.1 3.4l3.1-2.6c-1.2-2-3.5-4.2-6.6-4.2-3.8 0-6.1 2.8-6.1 6.8 0 3.2 1.8 5.4 4.3 7.2 1.7 1.3 2.5 2.1 2.5 3.6 0 1.4-1 2.4-2.5 2.4-2.3 0-3.5-2-4.6-4.1l-3.2 2c1.5 3 4.2 5.9 7.9 5.9z"
-                    fill="#0081FB"
-                  />
-                </svg>
+                <Image src="/images/meta-logo.jpg" alt="Meta logo" width={48} height={48} className="object-contain" />
               </div>
               <h2 className="text-2xl font-bold" style={{ fontFamily: "cursive" }}>
                 Meta echoes
@@ -1317,7 +1279,7 @@ export default function InstagramEchoes() {
                           </div>
                           <div className="flex items-center space-x-4 text-sm flex-shrink-0">
                             <div className="flex items-center space-x-1">
-                              <Eye className="w-4 h-4 text-gray-600" />
+                              <TrendingUp className="w-4 h-4 text-gray-600" />
                               <span className="whitespace-nowrap">{account.views}</span>
                             </div>
                             <div className="flex items-center space-x-1">
@@ -1384,7 +1346,7 @@ export default function InstagramEchoes() {
                           </div>
                           <div className="flex items-center space-x-4 text-sm flex-shrink-0">
                             <div className="flex items-center space-x-1">
-                              <Eye className="w-4 h-4 text-gray-600" />
+                              <TrendingUp className="w-4 h-4 text-gray-600" />
                               <span className="whitespace-nowrap">{account.views}</span>
                             </div>
                             <div className="flex items-center space-x-1">
