@@ -1020,7 +1020,8 @@ export default function InstagramEchoes() {
     { label: "WhatsApp Status", shortLabel: "WA", count: "148", views: "3,842", likes: "864", tone: "bg-emerald-500" },
     { label: "Instagram Stories", shortLabel: "IG", count: currentAnalytics.stories.totalCount, views: currentAnalytics.stories.totalViews, likes: currentAnalytics.stories.totalLikes, tone: "bg-fuchsia-500" },
     { label: "Facebook Stories", shortLabel: "FB", count: "96", views: "2,114", likes: "527", tone: "bg-blue-500" },
-    { label: "Threads Feed", shortLabel: "TH", count: currentAnalytics.feed.totalCount, views: currentAnalytics.feed.totalViews, likes: currentAnalytics.feed.totalLikes, tone: "bg-sky-400" },
+    { label: "Instagram Feed", shortLabel: "IG", count: currentAnalytics.feed.totalCount, views: currentAnalytics.feed.totalViews, likes: currentAnalytics.feed.totalLikes, tone: "bg-violet-500" },
+    { label: "Facebook Feed", shortLabel: "FB", count: "72", views: "1,486", likes: "318", tone: "bg-blue-600" },
   ]
 
   const totalPlatformCount = platformAnalytics.reduce((total, platform) => total + parseCount(platform.count), 0)
@@ -1128,7 +1129,6 @@ export default function InstagramEchoes() {
                     <button
                       onClick={() => {
                         setActivePost(post.id)
-                        setModalPage(0) // Reset to Stories page when opening
                       }}
                       className="flex items-center space-x-0.5"
                       aria-label="Echoes"
@@ -1170,7 +1170,7 @@ export default function InstagramEchoes() {
               </div>
               <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-gray-400">Echoes analytics</p>
               <h2 className="mt-1 text-2xl font-bold tracking-tight text-gray-950">Your reach, everywhere</h2>
-              <p className="mt-1 text-xs text-gray-500">A unified view across every story and feed.</p>
+              <p className="mt-1 text-xs text-gray-500">A unified view across stories and feeds on Meta platforms.</p>
             </div>
 
             <div className="overflow-y-auto px-4 py-4">
@@ -1185,7 +1185,7 @@ export default function InstagramEchoes() {
                 <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-white/10">
                   <div className="h-full w-[78%] rounded-full bg-white" />
                 </div>
-                <div className="mt-2 flex justify-between text-[10px] text-gray-400"><span>Across 4 surfaces</span><span>+18.4% this week</span></div>
+                <div className="mt-2 flex justify-between text-[10px] text-gray-400"><span>Across 5 surfaces</span><span>+18.4% this week</span></div>
               </div>
 
               <div className="flex flex-col gap-2.5">
