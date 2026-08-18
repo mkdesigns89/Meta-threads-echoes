@@ -1,8 +1,8 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
+import { useState } from "react"
 import Image from "next/image"
-import { Heart, MessageCircle, Repeat2, Send, MoreHorizontal, TrendingUp } from "lucide-react"
+import { Heart, MessageCircle, Repeat2, Send, MoreHorizontal } from "lucide-react"
 import EchoesIconSVG from "@/components/echoes-icon-svg"
 
 // Utility functions to parse and format numbers
@@ -1000,9 +1000,6 @@ export default function InstagramEchoes() {
   const [activePost, setActivePost] = useState<number | null>(null)
   const [activeTab, setActiveTab] = useState<"for-you" | "following">("for-you")
   const [likedPosts, setLikedPosts] = useState<number[]>([])
-  const [modalPage, setModalPage] = useState(0) // 0 = Stories, 1 = Feed
-  const modalCarouselRef = useRef<HTMLDivElement>(null)
-
   // Function to calculate total echoes count for a post
   const getTotalEchoesCount = (postId: number): string => {
     const analytics = mockEchoesAnalytics.find((d) => d.postId === postId)
@@ -1010,51 +1007,24 @@ export default function InstagramEchoes() {
 
     const storiesCount = parseCount(analytics.stories.totalCount)
     const feedCount = parseCount(analytics.feed.totalCount)
-    const totalCount = storiesCount + feedCount
-
-    return formatCount(totalCount)
-  }
-
-  // Handle modal page navigation
-  useEffect(() => {
-    const modalCarousel = modalCarouselRef.current
-    const onModalScroll = () => {
-      if (modalCarousel) {
-        const index = Math.round(modalCarousel.scrollLeft / modalCarousel.clientWidth)
-        setModalPage(index)
-      }
-    }
-    modalCarousel?.addEventListener("scroll", onModalScroll)
-    return () => modalCarousel?.removeEventListener("scroll", onModalScroll)
-  }, [activePost])
-
-  // Function to navigate to a specific modal page
-  const navigateToModalPage = (index: number) => {
-    if (modalCarouselRef.current) {
-      const pageWidth = modalCarouselRef.current.clientWidth
-      modalCarouselRef.current.scrollTo({
-        left: pageWidth * index,
-        behavior: "smooth",
-      })
-      setModalPage(index)
-    }
+    return formatCount(storiesCount + feedCount)
   }
 
   const currentAnalytics = mockEchoesAnalytics.find((d) => d.postId === activePost) || {
     postId: activePost,
-    stories: {
-      totalCount: "0",
-      totalViews: "0",
-      totalLikes: "0",
-      accounts: [],
-    },
-    feed: {
-      totalCount: "0",
-      totalViews: "0",
-      totalLikes: "0",
-      accounts: [],
-    },
+    stories: { totalCount: "0", totalViews: "0", totalLikes: "0", accounts: [] },
+    feed: { totalCount: "0", totalViews: "0", totalLikes: "0", accounts: [] },
   }
+
+  const platformAnalytics = [
+    { label: "WhatsApp Status", shortLabel: "WA", count: "148", views: "3,842", likes: "864", tone: "bg-emerald-500" },
+    { label: "Instagram Stories", shortLabel: "IG", count: currentAnalytics.stories.totalCount, views: currentAnalytics.stories.totalViews, likes: currentAnalytics.stories.totalLikes, tone: "bg-fuchsia-500" },
+    { label: "Facebook Stories", shortLabel: "FB", count: "96", views: "2,114", likes: "527", tone: "bg-blue-500" },
+    { label: "Instagram Feed", shortLabel: "IG", count: currentAnalytics.feed.totalCount, views: currentAnalytics.feed.totalViews, likes: currentAnalytics.feed.totalLikes, tone: "bg-violet-500" },
+    { label: "Facebook Feed", shortLabel: "FB", count: "72", views: "1,486", likes: "318", tone: "bg-blue-600" },
+  ]
+
+  const totalPlatformCount = platformAnalytics.reduce((total, platform) => total + parseCount(platform.count), 0)
 
   return (
     <div className="min-h-screen bg-white text-black font-sans">
@@ -1159,7 +1129,6 @@ export default function InstagramEchoes() {
                     <button
                       onClick={() => {
                         setActivePost(post.id)
-                        setModalPage(0) // Reset to Stories page when opening
                       }}
                       className="flex items-center space-x-0.5"
                       aria-label="Echoes"
@@ -1188,180 +1157,53 @@ export default function InstagramEchoes() {
         </div>
       </main>
 
-      {/* Instagram Echoes Analytics Modal */}
+      {/* Unified Echoes Analytics Modal */}
       {activePost !== null && (
-        <div className="fixed inset-0 z-40 bg-white/70 backdrop-blur-sm flex items-center justify-center">
-          <div className="bg-white rounded-2xl w-[95vw] max-w-sm h-[85vh] shadow-xl border border-gray-200 flex flex-col mx-2">
-            {/* Header with Meta logo and title */}
-            <div className="text-center py-4">
-              <div className="flex justify-center mb-2">
-                <Image src="/images/meta-logo.jpg" alt="Meta logo" width={24} height={24} className="object-contain" />
-              </div>
-              <h2 className="text-2xl font-bold" style={{ fontFamily: "cursive" }}>
-                Meta echoes
-              </h2>
-            </div>
-
-            {/* Close button */}
-            <button onClick={() => setActivePost(null)} className="absolute top-4 left-4 text-sm text-blue-500">
-              &larr; Back
+        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/45 px-3 backdrop-blur-sm">
+          <section className="relative flex h-[88vh] w-full max-w-sm flex-col overflow-hidden rounded-[28px] border border-gray-200 bg-white shadow-2xl">
+            <button onClick={() => setActivePost(null)} className="absolute left-4 top-4 z-10 rounded-full bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600" aria-label="Close analytics">
+              Back
             </button>
-
-            {/* Page indicator dots */}
-            <div className="flex justify-center space-x-2 mb-4">
-              {["Stories", "Feed"].map((_, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => navigateToModalPage(idx)}
-                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                    modalPage === idx ? "bg-black" : "bg-gray-300"
-                  }`}
-                  aria-label={`Go to ${idx === 0 ? "Stories" : "Feed"} page`}
-                />
-              ))}
+            <div className="border-b border-gray-100 px-5 pb-5 pt-5 text-center">
+              <div className="mx-auto mb-3 flex size-10 items-center justify-center rounded-2xl bg-black">
+                <Image src="/images/meta-logo.jpg" alt="Meta logo" width={22} height={22} className="rounded-md object-contain" />
+              </div>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-gray-400">Echoes analytics</p>
+              <h2 className="mt-1 text-2xl font-bold tracking-tight text-gray-950">Your reach, everywhere</h2>
+              <p className="mt-1 text-xs text-gray-500">A unified view across stories and feeds on Meta platforms.</p>
             </div>
 
-            {/* Horizontal scrollable pages */}
-            <div
-              ref={modalCarouselRef}
-              className="flex overflow-x-scroll snap-x snap-mandatory hide-scrollbar flex-1"
-              style={{ scrollSnapType: "x mandatory" }}
-            >
-              {/* Stories Page */}
-              <div className="min-w-full flex-shrink-0 snap-center">
-                <div className="flex flex-col h-full">
-                  {/* Stats header */}
-                  <div className="flex justify-between items-center px-3 mb-4">
-                    <div className="flex items-center text-sm font-medium">
-                      <span>{currentAnalytics.stories.totalCount} stories</span>
-                    </div>
-                    <div className="flex space-x-4 text-sm font-medium">
-                      <span>{currentAnalytics.stories.totalViews} views</span>
-                      <span>{currentAnalytics.stories.totalLikes} likes</span>
-                    </div>
+            <div className="overflow-y-auto px-4 py-4">
+              <div className="mb-4 rounded-2xl bg-gray-950 p-4 text-white">
+                <div className="flex items-end justify-between gap-3">
+                  <div>
+                    <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-gray-400">Total echoes</p>
+                    <p className="mt-1 text-4xl font-semibold tracking-tight">{formatCount(totalPlatformCount)}</p>
                   </div>
-
-                  {/* Accounts list */}
-                  <div className="overflow-y-auto flex-1 px-3 pb-4">
-                    <div className="space-y-3">
-                      {currentAnalytics.stories.accounts.map((account, idx) => (
-                        <div key={idx} className="flex items-center justify-between">
-                          <div className="flex items-center space-x-3 flex-1 min-w-0">
-                            <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 border border-gray-200 flex items-center justify-center">
-                              <Image
-                                src={account.avatar || "/placeholder.svg"}
-                                alt={account.username}
-                                width={48}
-                                height={48}
-                                className="w-full h-full object-cover rounded-full"
-                              />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center space-x-1">
-                                <span className="font-semibold text-sm truncate">{account.username}</span>
-                                {account.verified && (
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 24 24"
-                                    fill="currentColor"
-                                    className="w-4 h-4 text-blue-500 flex-shrink-0"
-                                  >
-                                    <path
-                                      fillRule="evenodd"
-                                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
-                                      clipRule="evenodd"
-                                    />
-                                  </svg>
-                                )}
-                              </div>
-                              <p className="text-xs text-gray-500 truncate">{account.displayName}</p>
-                            </div>
-                          </div>
-                          <div className="flex items-center space-x-4 text-sm flex-shrink-0">
-                            <div className="flex items-center space-x-1">
-                              <TrendingUp className="w-4 h-4 text-gray-600" />
-                              <span className="whitespace-nowrap">{account.views}</span>
-                            </div>
-                            <div className="flex items-center space-x-1">
-                              <Heart className="w-4 h-4 text-red-500" fill="currentColor" />
-                              <span className="whitespace-nowrap">{account.likes}</span>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+                  <div className="rounded-full bg-white/10 px-2.5 py-1 text-[10px] font-medium text-gray-300">All channels</div>
                 </div>
+                <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-white/10">
+                  <div className="h-full w-[78%] rounded-full bg-white" />
+                </div>
+                <div className="mt-2 flex justify-between text-[10px] text-gray-400"><span>Across 5 surfaces</span><span>+18.4% this week</span></div>
               </div>
 
-              {/* Feed Page */}
-              <div className="min-w-full flex-shrink-0 snap-center">
-                <div className="flex flex-col h-full">
-                  {/* Stats header */}
-                  <div className="flex justify-between items-center px-3 mb-4">
-                    <div className="flex items-center text-sm font-medium">
-                      <span>{currentAnalytics.feed.totalCount} feed</span>
+              <div className="flex flex-col gap-2.5">
+                {platformAnalytics.map((platform) => (
+                  <article key={platform.label} className="rounded-2xl border border-gray-200 bg-gray-50 p-3.5">
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="flex min-w-0 items-center gap-3">
+                        <div className={`flex size-9 shrink-0 items-center justify-center rounded-xl text-[10px] font-bold text-white ${platform.tone}`}>{platform.shortLabel}</div>
+                        <div className="min-w-0"><h3 className="truncate text-sm font-semibold text-gray-900">{platform.label}</h3><p className="text-[11px] text-gray-500">{platform.count} echoes</p></div>
+                      </div>
+                      <span className="rounded-full bg-white px-2 py-1 text-[10px] font-medium text-gray-500">Live</span>
                     </div>
-                    <div className="flex space-x-4 text-sm font-medium">
-                      <span>{currentAnalytics.feed.totalViews} views</span>
-                      <span>{currentAnalytics.feed.totalLikes} likes</span>
-                    </div>
-                  </div>
-
-                  {/* Accounts list */}
-                  <div className="overflow-y-auto flex-1 px-3 pb-4">
-                    <div className="space-y-3">
-                      {currentAnalytics.feed.accounts.map((account, idx) => (
-                        <div key={idx} className="flex items-center justify-between">
-                          <div className="flex items-center space-x-3 flex-1 min-w-0">
-                            <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 border border-gray-200 flex items-center justify-center">
-                              <Image
-                                src={account.avatar || "/placeholder.svg"}
-                                alt={account.username}
-                                width={48}
-                                height={48}
-                                className="w-full h-full object-cover rounded-full"
-                              />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center space-x-1">
-                                <span className="font-semibold text-sm truncate">{account.username}</span>
-                                {account.verified && (
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 24 24"
-                                    fill="currentColor"
-                                    className="w-4 h-4 text-blue-500 flex-shrink-0"
-                                  >
-                                    <path
-                                      fillRule="evenodd"
-                                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
-                                      clipRule="evenodd"
-                                    />
-                                  </svg>
-                                )}
-                              </div>
-                              <p className="text-xs text-gray-500 truncate">{account.displayName}</p>
-                            </div>
-                          </div>
-                          <div className="flex items-center space-x-4 text-sm flex-shrink-0">
-                            <div className="flex items-center space-x-1">
-                              <TrendingUp className="w-4 h-4 text-gray-600" />
-                              <span className="whitespace-nowrap">{account.views}</span>
-                            </div>
-                            <div className="flex items-center space-x-1">
-                              <Heart className="w-4 h-4 text-red-500" fill="currentColor" />
-                              <span className="whitespace-nowrap">{account.likes}</span>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+                    <div className="mt-3 grid grid-cols-2 gap-2 border-t border-gray-200 pt-3 text-xs"><div><p className="text-[10px] uppercase tracking-wide text-gray-400">Views</p><p className="mt-0.5 font-semibold text-gray-800">{platform.views}</p></div><div><p className="text-[10px] uppercase tracking-wide text-gray-400">Likes</p><p className="mt-0.5 font-semibold text-gray-800">{platform.likes}</p></div></div>
+                  </article>
+                ))}
               </div>
             </div>
-          </div>
+          </section>
         </div>
       )}
     </div>
